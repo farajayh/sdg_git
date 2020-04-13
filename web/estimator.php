@@ -38,7 +38,7 @@
           }
           echo xml_response($input_data);
           $log_file = fopen("log_file.txt","a");
-          fwrite($log_file, $_SERVER['REQUEST_METHOD']."\t\t".$_SERVER['REQUEST_URI']."\t\t".http_response_code()."\t\t".((microtime(true)-$start)*1000)."ms\n");
+          fwrite($log_file, $_SERVER['REQUEST_METHOD']."\t\t".$_SERVER['REQUEST_URI']."\t\t".http_response_code()."\t\t".floor(((microtime(true)-$start)*10000))."ms\n");
           fclose($log_file);
           break;
 
@@ -51,7 +51,7 @@
           }
           echo json_encode(covid19ImpactEstimator($input_data));
           $log_file = fopen("log_file.txt","a");
-          fwrite($log_file, $_SERVER['REQUEST_METHOD']."\t\t".$_SERVER['REQUEST_URI']."\t".http_response_code()."\t\t".((microtime(true)-$start)*1000)."ms\n");
+          fwrite($log_file, $_SERVER['REQUEST_METHOD']."\t\t".$_SERVER['REQUEST_URI']."\t".http_response_code()."\t\t".floor(((microtime(true)-$start)*10000))."ms\n");
           fclose($log_file);
           break;
 
@@ -64,7 +64,7 @@
         }
         echo json_encode(covid19ImpactEstimator($input_data));
         $log_file = fopen("log_file.txt","a");
-        fwrite($log_file, $_SERVER['REQUEST_METHOD']."\t\t".$_SERVER['REQUEST_URI']."\t\t\t".http_response_code()."\t\t".((microtime(true)-$start)*1000)."ms\n");
+        fwrite($log_file, $_SERVER['REQUEST_METHOD']."\t\t".$_SERVER['REQUEST_URI']."\t\t".http_response_code()."\t\t".floor(((microtime(true)-$start)*10000))."ms\n");
         fclose($log_file);
         break;
 
@@ -110,8 +110,8 @@
     $severeImpactSevereCasesByRequestedTime = floor((15/100)*$severeImpactInfectionsByRequestedTime);
 
     //hospital bed by requested time
-    $impactHospitalBedsByRequestedTime = ceil((35/100)*$data['totalHospitalBeds']) - $impactSevereCasesByRequestedTime;
-    $severeImpactHospitalBedsByRequestedTime = ceil((35/100)*$data['totalHospitalBeds']) - $severeImpactSevereCasesByRequestedTime;
+    $impactHospitalBedsByRequestedTime = floor((35/100)*$data['totalHospitalBeds']) - $impactSevereCasesByRequestedTime;
+    $severeImpactHospitalBedsByRequestedTime = floor((35/100)*$data['totalHospitalBeds']) - $severeImpactSevereCasesByRequestedTime;
 
     //cases for ICU by requested time
     $impactCasesForICUByRequestedTime = floor((5/100)*$impactInfectionsByRequestedTime);
