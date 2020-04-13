@@ -110,8 +110,8 @@
     $severeImpactSevereCasesByRequestedTime = floor((15/100)*$severeImpactInfectionsByRequestedTime);
 
     //hospital bed by requested time
-    $impactHospitalBedsByRequestedTime = ceil((35/100)*$data['totalHospitalBeds'] - $impactSevereCasesByRequestedTime);
-    $severeImpactHospitalBedsByRequestedTime = ceil((35/100)*$data['totalHospitalBeds'] - $severeImpactSevereCasesByRequestedTime);
+    $impactHospitalBedsByRequestedTime = floor((35/100)*$data['totalHospitalBeds'] - $impactSevereCasesByRequestedTime);
+    $severeImpactHospitalBedsByRequestedTime = floor((35/100)*$data['totalHospitalBeds'] - $severeImpactSevereCasesByRequestedTime);
 
     //cases for ICU by requested time
     $impactCasesForICUByRequestedTime = floor((5/100)*$impactInfectionsByRequestedTime);
