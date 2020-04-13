@@ -1,31 +1,31 @@
 <?php
-
+  //set execution start time
   $start = microtime(true);
   
+  //set neccessary headers
   header("Access-Control-Allow-Methods: POST");
   header("Access-Control-Max-Age: 3600");
   header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-  
-  
+  //accept input as json
   $request_data = json_decode(file_get_contents("php://input"));
     
-    
-    $input_data = array (
-      'region' => array(
-                      'name' => $request_data->region->name,
-                      'avgAge' => $request_data->region->avgAge,
-                      'avgDailyIncomeInUSD' => $request_data->region->avgDailyIncomeInUSD,
-                      'avgDailyIncomePopulation' => $request_data->region->avgDailyIncomePopulation
-                    ),
-      'periodType' => $request_data->periodType,
-      'timeToElapse' =>  $request_data->timeToElapse,
-      'reportedCases' => $request_data->reportedCases,
-      'population' => $request_data->population,
-      'totalHospitalBeds' => $request_data->totalHospitalBeds,
-      );
-
-
+  //set input array
+  $input_data = array (
+    'region' => array(
+                    'name' => $request_data->region->name,
+                    'avgAge' => $request_data->region->avgAge,
+                    'avgDailyIncomeInUSD' => $request_data->region->avgDailyIncomeInUSD,
+                    'avgDailyIncomePopulation' => $request_data->region->avgDailyIncomePopulation
+                  ),
+    'periodType' => $request_data->periodType,
+    'timeToElapse' =>  $request_data->timeToElapse,
+    'reportedCases' => $request_data->reportedCases,
+    'population' => $request_data->population,
+    'totalHospitalBeds' => $request_data->totalHospitalBeds,
+    );
+  
+  //routing
   $request = $_SERVER['REQUEST_URI'];
 
   switch ($request) {
@@ -81,8 +81,10 @@
           break;
   }
 
+  //estimator function
   function covid19ImpactEstimator($data)
   {
+    //normalise period type to days
     switch ($data['periodType']){
       case 'weeks':
         $timeToElapse = $data['timeToElapse']*7;
@@ -123,6 +125,7 @@
     $impactDollarsInFlight = floor(($impactInfectionsByRequestedTime * $data['region']['avgDailyIncomePopulation'] * $data['region']['avgDailyIncomeInUSD'])/$timeToElapse);
     $severeImpactDollarsInFlight = floor(($severeImpactInfectionsByRequestedTime * $data['region']['avgDailyIncomePopulation'] * $data['region']['avgDailyIncomeInUSD'])/$timeToElapse);
 
+    //generate output data
     $data = array(
                         'data' => $data,
                         'impact' => array(
@@ -147,10 +150,7 @@
     return $data;
   }
 
-  //echo json_encode(covid19ImpactEstimator($input_data));
-  
-  //echo "<br>".$_SERVER['REQUEST_URI'];
-
+  //function to generate xml response
   function xml_response($input_data){
 
     $result = covid19ImpactEstimator($input_data);
