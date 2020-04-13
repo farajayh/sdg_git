@@ -38,7 +38,7 @@
           }
           echo xml_response($input_data);
           $log_file = fopen("log_file.txt","a");
-          fwrite($log_file, $_SERVER['REQUEST_METHOD']."\t\t".$_SERVER['REQUEST_URI']."\t\t".http_response_code()."\t\t".((microtime(true)-$start)*1000)."ms\n");
+          fwrite($log_file, $_SERVER['REQUEST_METHOD']."\t\t".$_SERVER['REQUEST_URI']."\t\t\t\t".http_response_code()."\t\t".((microtime(true)-$start)*1000)."ms\n");
           fclose($log_file);
           break;
 
@@ -51,7 +51,7 @@
           }
           echo json_encode(covid19ImpactEstimator($input_data));
           $log_file = fopen("log_file.txt","a");
-          fwrite($log_file, $_SERVER['REQUEST_METHOD']."\t\t".$_SERVER['REQUEST_URI']."\t\t".http_response_code()."\t\t".((microtime(true)-$start)*1000)."ms\n");
+          fwrite($log_file, $_SERVER['REQUEST_METHOD']."\t\t".$_SERVER['REQUEST_URI']."\t\t\t\t".http_response_code()."\t\t".((microtime(true)-$start)*1000)."ms\n");
           fclose($log_file);
           break;
 
@@ -64,7 +64,7 @@
         }
         echo json_encode(covid19ImpactEstimator($input_data));
         $log_file = fopen("log_file.txt","a");
-        fwrite($log_file, $_SERVER['REQUEST_METHOD']."\t\t".$_SERVER['REQUEST_URI']."\t\t".http_response_code()."\t\t".((microtime(true)-$start)*1000)."ms\n");
+        fwrite($log_file, $_SERVER['REQUEST_METHOD']."\t\t".$_SERVER['REQUEST_URI']."\t\t\t\t".http_response_code()."\t\t".((microtime(true)-$start)*1000)."ms\n");
         fclose($log_file);
         break;
 
