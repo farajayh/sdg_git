@@ -1,8 +1,3 @@
-RewriteEngine on
-
-RewriteBase /sdg
-
-RewriteCond %{REQUEST_URI} !/estimator.php$ 
-RewriteCond %{REMOTE_HOST} !^127\.0\.0\.1
-
-RewriteRule $ estimator.php [L]
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ estimator.php [QSA,L]
