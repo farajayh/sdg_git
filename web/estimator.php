@@ -1,17 +1,6 @@
 <?php
+
   $start = microtime(true);
-  /*$d = new stdClass;
-  $d->region = new stdClass;
-  $d->region->name = "Africa";
-  $d->region->avgAge = 19.7;
-  $d->region->avgDailyIncomeInUSD = 5;
-  $d->region->avgDailyIncomePopulation = 0.71;
-  $d->periodType = "days";
-  $d->timeToElapse = 58;
-  $d->reportedCases = 674;
-  $d->poulation = 66622705;
-  $d->totalHospitalBeds = 1380614;*/
-  //header("content-type: application/json");
   
   header("Access-Control-Allow-Methods: POST");
   header("Access-Control-Max-Age: 3600");
@@ -20,27 +9,6 @@
   
   
   $request_data = json_decode(file_get_contents("php://input"));
-  //print_r($request_data);
-  //print_r($_SERVER['REQUEST_URI']);
-  //print_r((microtime(true)-$start)*1000);
-
-
-
-  /*$input_data = array (
-    'region' => array(
-                    'name' => "Africa",
-                    'avgAge' => 19.7,
-                    'avgDailyIncomeInUSD' => 5,
-                    'avgDailyIncomePopulation' => 0.71
-                  ),
-    'periodType' => "days",
-    'timeToElapse' =>  58,
-    'reportedCases' => 674,
-    'population' => 66622705,
-    'totalHospitalBeds' => 1380614
-    );*/
-    
-
     
     
     $input_data = array (
@@ -61,7 +29,7 @@
   $request = $_SERVER['REQUEST_URI'];
 
   switch ($request) {
-      case '/sdg/xml' :
+      case '/api/v1/on-covid-19/xml' :
           header("Content-type: text/xml");
           if ($request_data == null){
             header("Content-type: application/json");
@@ -74,7 +42,7 @@
           fclose($log_file);
           break;
 
-      case '/sdg/json' :
+      case '/api/v1/on-covid-19/json' :
           header("Content-type: application/json");
           if ($request_data == null){
             header("Content-type: application/json");
@@ -87,7 +55,20 @@
           fclose($log_file);
           break;
 
-      case '/sdg/logs' :
+      case '/api/v1/on-covid-19' :
+        header("Content-type: application/json");
+        if ($request_data == null){
+          header("Content-type: application/json");
+          echo json_encode(array("Response" => "Invalid or missing inputs"));
+          return;
+        }
+        echo json_encode(covid19ImpactEstimator($input_data));
+        $log_file = fopen("log_file.txt","a");
+        fwrite($log_file, $_SERVER['REQUEST_METHOD']."\t\t".$_SERVER['REQUEST_URI']."\t\t".http_response_code()."\t\t".((microtime(true)-$start)*1000)."ms\n");
+        fclose($log_file);
+        break;
+
+      case '/api/v1/on-covid-19/logs' :
         header("Content-type: text");
         $log_file = fopen("log_file.txt","r");
         echo fread($log_file, filesize("log_file.txt"));
@@ -95,19 +76,11 @@
 
       default:
           header("Content-type: application/json");
-          if ($request_data == null){
-            header("Content-type: application/json");
-            echo json_encode(array("Response" => "Invalid or missing inputs"));
-            return;
-          }
-          echo json_encode(covid19ImpactEstimator($input_data));
-          $log_file = fopen("log_file.txt","a");
-          fwrite($log_file, $_SERVER['REQUEST_METHOD']."\t\t".$_SERVER['REQUEST_URI']."\t\t".http_response_code()."\t\t".((microtime(true)-$start)*1000)."ms\n");
-          fclose($log_file);
+          echo json_encode(array("Response" => "Unrecognised endpoint"));
+
           break;
   }
 
-  //print_r(floor(5/2));
   function covid19ImpactEstimator($data)
   {
     switch ($data['periodType']){
@@ -121,6 +94,7 @@
         $timeToElapse = $data['timeToElapse'];
       
     }
+
     //currently infected
     $impactCurrentlyInfected = $data['reportedCases']*10;
     $severeImpactCurrentlyInfected = $data['reportedCases']*50;
@@ -134,8 +108,8 @@
     $severeImpactSevereCasesByRequestedTime = floor((15/100)*$severeImpactInfectionsByRequestedTime);
 
     //hospital bed by requested time
-    $impactHospitalBedsByRequestedTime = floor((35/100)*$data['totalHospitalBeds']) - $impactSevereCasesByRequestedTime;
-    $severeImpactHospitalBedsByRequestedTime = floor((35/100)*$data['totalHospitalBeds']) - $severeImpactSevereCasesByRequestedTime;
+    $impactHospitalBedsByRequestedTime = ceil((35/100)*$data['totalHospitalBeds'] - $impactSevereCasesByRequestedTime);
+    $severeImpactHospitalBedsByRequestedTime = ceil((35/100)*$data['totalHospitalBeds'] - $severeImpactSevereCasesByRequestedTime);
 
     //cases for ICU by requested time
     $impactCasesForICUByRequestedTime = floor((5/100)*$impactInfectionsByRequestedTime);
@@ -146,8 +120,8 @@
     $severeImpactCasesForVentilatorsByRequestedTime = floor((2/100)*$severeImpactInfectionsByRequestedTime);
 
     //dollars in flight
-    $impactDollarsInFlight = floor(($impactInfectionsByRequestedTime * 0.71 * 5)/28);
-    $severeImpactDollarsInFlight = floor(($severeImpactInfectionsByRequestedTime * 0.71 * 5)/28);
+    $impactDollarsInFlight = floor(($impactInfectionsByRequestedTime * $data['region']['avgDailyIncomePopulation'] * $data['region']['avgDailyIncomeInUSD'])/$timeToElapse);
+    $severeImpactDollarsInFlight = floor(($severeImpactInfectionsByRequestedTime * $data['region']['avgDailyIncomePopulation'] * $data['region']['avgDailyIncomeInUSD'])/$timeToElapse);
 
     $data = array(
                         'data' => $data,
