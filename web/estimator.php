@@ -1,6 +1,6 @@
 <?php
   //set execution start time
-  $start = microtime(true);
+  $start_time = microtime(true);
   
   //set neccessary headers
   header("Access-Control-Allow-Methods: POST, GET");
