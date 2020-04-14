@@ -1,7 +1,7 @@
 <?php
   //set execution start time
   $start_time = microtime(true);
-  
+  sleep(3);
   //set neccessary headers
   header("Access-Control-Allow-Methods: POST, GET");
   header("Access-Control-Max-Age: 3600");
