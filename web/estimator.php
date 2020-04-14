@@ -110,8 +110,8 @@
     $severeImpactSevereCasesByRequestedTime = intval((15/100)*$severeImpactInfectionsByRequestedTime);
 
     //hospital bed by requested time
-    $impactHospitalBedsByRequestedTime = intval((35/100)*$data['totalHospitalBeds']) - $impactSevereCasesByRequestedTime;
-    $severeImpactHospitalBedsByRequestedTime = intval((35/100)*$data['totalHospitalBeds']) - $severeImpactSevereCasesByRequestedTime;
+    $impactHospitalBedsByRequestedTime = intval(((35/100)*$data['totalHospitalBeds']) - $impactSevereCasesByRequestedTime);
+    $severeImpactHospitalBedsByRequestedTime = intval(((35/100)*$data['totalHospitalBeds']) - $severeImpactSevereCasesByRequestedTime);
 
     //cases for ICU by requested time
     $impactCasesForICUByRequestedTime = intval((5/100)*$impactInfectionsByRequestedTime);
