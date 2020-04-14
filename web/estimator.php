@@ -1,7 +1,4 @@
 <?php
-  //set execution start time
-  $start_time = microtime(true);
-  sleep(3);
   //set neccessary headers
   header("Access-Control-Allow-Methods: POST, GET");
   header("Access-Control-Max-Age: 3600");
@@ -37,7 +34,7 @@
             return;
           }
           echo xml_response($input_data);
-          log_call($start_time);
+          log_call();
           break;
 
       case '/api/v1/on-covid-19/json' :
@@ -49,7 +46,7 @@
           }
           http_response_code(200);
           echo json_encode(covid19ImpactEstimator($input_data));
-          log_call($start_time);
+          log_call();
           break;
 
       case '/api/v1/on-covid-19' :
@@ -60,7 +57,7 @@
           return;
         }
         echo json_encode(covid19ImpactEstimator($input_data));
-        log_call($start_time);
+        log_call();
         break;
 
       case '/api/v1/on-covid-19/logs' :
@@ -146,9 +143,9 @@
   }
 
   //log function
-  function log_call($start_time){
+  function log_call(){
     $end_time = microtime(true);
-    $response_time = intval(($end_time-$start_time)*1000);
+    $response_time = intval(($end_time-$_SERVER["REQUEST_TIME_FLOAT"])*1000);
     if ($response_time < 10){
       (string)$response_time;
       $response_time = "0".$response_time;
