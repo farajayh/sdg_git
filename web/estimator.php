@@ -6,7 +6,7 @@
 
   //accept input as json
   $request_data = json_decode(file_get_contents("php://input"));
-  sleep(1);
+  
     
   //set input array
   $input_data = array (
