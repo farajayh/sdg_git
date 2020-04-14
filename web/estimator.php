@@ -10,7 +10,7 @@
   //accept input as json
   $request_data = json_decode(file_get_contents("php://input"));
     
-  //set input array
+  /*//set input array
   $input_data = array (
     'region' => array(
                     'name' => $request_data->region->name,
@@ -23,7 +23,22 @@
     'reportedCases' => $request_data->reportedCases,
     'population' => $request_data->population,
     'totalHospitalBeds' => $request_data->totalHospitalBeds,
-    );
+    );*/
+    $input_data = array (
+      'region' => array(
+            'name' => "Africa",
+            'avgAge' => 19.7,
+            'avgDailyIncomeInUSD' => 5,
+            'avgDailyIncomePopulation' => 0.71
+          ),
+      'periodType' => "days",
+      'timeToElapse' =>  58,
+      'reportedCases' => 674,
+      'population' => 66622705,
+      'totalHospitalBeds' => 1380614,
+      'impact' => array(),
+      'severeImpact' => array()
+      );
   
   //routing
   $request = $_SERVER['REQUEST_URI'];
