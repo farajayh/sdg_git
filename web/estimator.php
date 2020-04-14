@@ -61,7 +61,7 @@
         break;
 
       case '/api/v1/on-covid-19/logs' :
-        header("Content-type: text");
+        header("Content-type: text/plain");
         $log_file = fopen("log_file.txt","r");
         echo fread($log_file, filesize("log_file.txt"));
         break;
