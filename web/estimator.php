@@ -3,7 +3,7 @@
   $start = microtime(true);
   
   //set neccessary headers
-  header("Access-Control-Allow-Methods: POST");
+  header("Access-Control-Allow-Methods: POST, GET");
   header("Access-Control-Max-Age: 3600");
   header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
@@ -110,8 +110,8 @@
     $severeImpactSevereCasesByRequestedTime = floor((15/100)*$severeImpactInfectionsByRequestedTime);
 
     //hospital bed by requested time
-    $impactHospitalBedsByRequestedTime = floor((35/100)*$data['totalHospitalBeds']) - $impactSevereCasesByRequestedTime;
-    $severeImpactHospitalBedsByRequestedTime = floor((35/100)*$data['totalHospitalBeds']) - $severeImpactSevereCasesByRequestedTime;
+    $impactHospitalBedsByRequestedTime = ceil((35/100)*$data['totalHospitalBeds']) - $impactSevereCasesByRequestedTime;
+    $severeImpactHospitalBedsByRequestedTime = ceil((35/100)*$data['totalHospitalBeds']) - $severeImpactSevereCasesByRequestedTime;
 
     //cases for ICU by requested time
     $impactCasesForICUByRequestedTime = floor((5/100)*$impactInfectionsByRequestedTime);
