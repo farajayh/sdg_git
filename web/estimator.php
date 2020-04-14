@@ -150,8 +150,8 @@
     $end_time = microtime(true);
     $response_time = intval(($end_time-$start_time)*1000);
     if ($response_time < 10){
-      $response_time = (string)$response_time;
-      $reponse_time = "0".$response_time;
+      (string)$response_time;
+      $response_time = "0".$response_time;
     }
     $log_file = fopen("log_file.txt","a");
     fwrite($log_file, $_SERVER['REQUEST_METHOD']."\t\t".$_SERVER['REQUEST_URI']."\t\t".http_response_code()."\t\t".$response_time."ms\n");
