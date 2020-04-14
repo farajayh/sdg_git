@@ -37,9 +37,7 @@
             return;
           }
           echo xml_response($input_data);
-          $log_file = fopen("log_file.txt","a");
-          fwrite($log_file, $_SERVER['REQUEST_METHOD']."\t\t".$_SERVER['REQUEST_URI']."\t\t".http_response_code()."\t\t".intval(((microtime(true)-$start)*1000))."ms\n");
-          fclose($log_file);
+          log_call();
           break;
 
       case '/api/v1/on-covid-19/json' :
@@ -51,9 +49,7 @@
           }
           http_response_code(200);
           echo json_encode(covid19ImpactEstimator($input_data));
-          $log_file = fopen("log_file.txt","a");
-          fwrite($log_file, $_SERVER['REQUEST_METHOD']."\t\t".$_SERVER['REQUEST_URI']."\t".http_response_code()."\t\t".intval(((microtime(true)-$start)*1000))."ms\n");
-          fclose($log_file);
+          log_call();
           break;
 
       case '/api/v1/on-covid-19' :
@@ -64,9 +60,7 @@
           return;
         }
         echo json_encode(covid19ImpactEstimator($input_data));
-        $log_file = fopen("log_file.txt","a");
-        fwrite($log_file, $_SERVER['REQUEST_METHOD']."\t\t".$_SERVER['REQUEST_URI']."\t\t".http_response_code()."\t\t".intval(((microtime(true)-$start)*1000))."ms\n");
-        fclose($log_file);
+        log_call();
         break;
 
       case '/api/v1/on-covid-19/logs' :
@@ -149,6 +143,19 @@
                         ),
                   );
     return $data;
+  }
+
+  //log function
+  function log_call(){
+    $end_time = microtime(true);
+    $response_time = intval(($end_time-$start_time)*1000);
+    if ($response_time < 10){
+      $response_time = (string)$response_time;
+      $reponse_time = "0".$response_time;
+    }
+    $log_file = fopen("log_file.txt","a");
+    fwrite($log_file, $_SERVER['REQUEST_METHOD']."\t\t".$_SERVER['REQUEST_URI']."\t\t".http_response_code()."\t\t".$response_time."ms\n");
+    fclose($log_file);
   }
 
   //function to generate xml response
